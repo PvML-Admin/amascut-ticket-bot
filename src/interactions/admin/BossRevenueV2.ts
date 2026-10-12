@@ -163,8 +163,10 @@ export default class BossRevenueV2 extends BotInteraction {
         try {
             await interaction.editReply({ content: 'Force refreshing Amascut revenue message...' });
             
-            await this.refreshLastMessage();
-            
+            if (!(await this.refreshLastMessage())) {
+                throw new Error('Refresh failed');
+            }
+
             await interaction.editReply({ content: 'Successfully refreshed the last Amascut revenue message!' });
         } catch (error) {
             const errorEmbed = new EmbedBuilder()
@@ -622,18 +624,44 @@ export default class BossRevenueV2 extends BotInteraction {
         }
     }
 
-    public async refreshLastMessage(): Promise<void> {
+    private untrackLastMessage(): void {
+        try {
+            const configPath = path.join(process.cwd(), 'boss-configs.json');
+            const configData = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+            if (!configData.amascut) return;
+
+            delete configData.amascut.lastMessageId;
+            delete configData.amascut.lastChannelId;
+            delete configData.amascut.lastGuildId;
+
+            fs.writeFileSync(configPath, JSON.stringify(configData, null, 4));
+        } catch (error) {
+            console.error('Failed to untrack message:', error);
+        }
+    }
+
+    public async refreshLastMessage(): Promise<boolean> {
         try {
             const config = this.loadBossConfig();
             if (!config.lastMessageId || !config.lastChannelId) {
-                return;
+                return false;
             }
 
             const channel = await this.client.channels.fetch(config.lastChannelId);
-            if (!channel || !('send' in channel)) return;
+            if (!channel || !('send' in channel)) return false;
 
             const message = await channel.messages.fetch(config.lastMessageId);
-            if (!message) return;
+            if (!message) return false;
+
+            // Discord only allows the author to edit a message, so a card posted by another bot account can never be refreshed.
+            if (message.author.id !== this.client.user?.id) {
+                this.client.logger.log({
+                    message: `Amascut revenue message ${config.lastMessageId} was posted by another account (${message.author.tag}) and cannot be edited. Stopped tracking it; post a new one with the boss revenue command to resume hourly refreshes.`,
+                    handler: this.constructor.name
+                }, true);
+                this.untrackLastMessage();
+                return false;
+            }
 
             const url = 'https://runescape.wiki/w/Money_making_guide/Killing_Amascut,_the_Devourer?action=edit';
             const versions = ['100 Enrage', '500 Enrage', '750 Enrage', '1000 Enrage', '2000 Enrage'];
@@ -685,9 +713,12 @@ export default class BossRevenueV2 extends BotInteraction {
                 });
 
                 console.log(`Amascut revenue message refreshed: ${config.lastMessageId}`);
+                return true;
             }
+            return false;
         } catch (error) {
             console.error('Failed to refresh message:', error);
+            return false;
         }
     }
 

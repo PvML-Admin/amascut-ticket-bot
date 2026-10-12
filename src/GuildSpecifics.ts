@@ -57,7 +57,8 @@ export function getChannels(guildId: string | undefined): Channels {
             masterTrialee1000TicketsCategory: '1492216896852988026',
             masterTrialee2000TicketsCategory: '1492216981972058122',
             grandmasterTrialee2000TicketsCategory: '1492216981972058122',
-            trialScheduling: '1495724268041011383'
+            trialScheduling: '1495724268041011383',
+            bounties: '1559161961143603202'
         }
     }
 
@@ -130,6 +131,9 @@ export function getChannels(guildId: string | undefined): Channels {
 
             // guides
             guides: '1389410242210693212',
+
+            // bounties
+            bounties: '1559161674181902346',
 
             // teamforming
             casualTeams: '1413114658541539410',
