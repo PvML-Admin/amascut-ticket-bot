@@ -1,0 +1,66 @@
+# eclipse project
+.project
+.settings
+.idea
+.vscode
+/slash-reloader-config.json
+
+# Bun Compiler Ignore
+bun.lock
+
+/config.json
+/lavalink-server.json
+/lavasfy-servers.json
+/misc.json
+out
+node_modules
+db
+package-lock.json
+*.env
+.env
+node_modules/
+dist/
+*.key
+*.pub
+copy.sh
+connect.sh
+*config.json
+!tsconfig.json
+config.json
+*.ppk
+*.pem
+db.json
+db-backups*
+*.sqlite
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Misc
+.DS_Store
+core.*
+.cache/
+.npm/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Bot Archives
+/upload_archives/
+/message-tags.json
+ticket-numbers.json
+notifications.json
+monitored-streamers.json
+dashboard-data.json
+
+# Google Credentials
+google-credentials.json
+src/interactions/info/BossRevenueV3.ts
+reminder-data.json

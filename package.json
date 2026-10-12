@@ -1,0 +1,38 @@
+{
+    "name": "amascut-util-bot",
+    "version": "1.0.0",
+    "description": "A bot made to help Amascut Administration",
+    "scripts": {
+        "build": "tsc -v",
+        "watch": "tsc --watch",
+        "start": "ts-node --transpile-only index.ts",
+        "start-js": "node ./dist/index.js"
+    },
+    "author": "Alex & Patze",
+    "license": "MIT",
+    "dependencies": {
+        "@types/node-cron": "^3.0.11",
+        "axios": "^1.10.0",
+        "discord-api-types": "^0.38.33",
+        "discord.js": "^14.27.0",
+        "dotenv": "^16.6.1",
+        "googleapis": "^155.0.1",
+        "jsonc-parser": "^3.3.1",
+        "node-cron": "^4.2.0",
+        "puppeteer": "^24.20.0",
+        "reflect-metadata": "^0.1.13",
+        "sqlite3": "^5.1.7",
+        "svg2img": "^1.0.0-beta.2",
+        "typeorm": "^0.3.11",
+        "uuid": "^8.3.2"
+    },
+    "devDependencies": {
+        "@types/express": "^5.0.3",
+        "@types/node": "^18.11.17",
+        "@types/uuid": "^8.3.4",
+        "eslint": "^8.1.0",
+        "ts-loader": "^9.3.1",
+        "ts-node": "^10.9.1",
+        "typescript": "^5.8.3"
+    }
+}
