@@ -279,6 +279,7 @@ export function getRoles(guildId: string | undefined, stripRole: boolean = false
             // Staff Roles
             owner: '1389387255386341386',
             admin: '1389526658167603230',
+            moderator: '1552714296046129214',
             trialTeam: '1436786514922311831',
             reportPerms: '1494316015415328778',
             vouchTeam: '1484617729515323596',

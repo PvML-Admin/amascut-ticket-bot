@@ -1258,7 +1258,7 @@ export default class TicketHandler {
         }
 
         if (channel.name.startsWith('clearance')) {
-            return false;
+            return await this.client.util.hasRolePermissions(this.client, ['moderator'], interaction) ?? false;
         }
 
         const userPermissions = channel.permissionOverwrites.cache.get(interaction.user.id);
@@ -1602,8 +1602,8 @@ export default class TicketHandler {
     }
 
     private async handleTicketOpen(interaction: ButtonInteraction<'cached'>): Promise<void> {
-        // Check if user has admin/owner permissions
-        const hasPermission = await this.client.util.hasRolePermissions(this.client, ['admin', 'owner'], interaction);
+        const isClearance = (interaction.channel as TextChannel).name.startsWith('clearance');
+        const hasPermission = await this.client.util.hasRolePermissions(this.client, isClearance ? ['moderator', 'admin', 'owner'] : ['admin', 'owner'], interaction);
         if (!hasPermission) {
             await interaction.reply({ content: 'You do not have permission to use this command.', flags: MessageFlags.Ephemeral });
             return;
@@ -2280,6 +2280,22 @@ export default class TicketHandler {
                         EmbedLinks: true,
                         ManageMessages: true,
                         ManageChannels: true,
+                        ManageThreads: true,
+                    }
+                );
+            }
+
+            // ManageThreads lets moderators see the private staff thread created below.
+            if (isClearanceTicket && this.client.roleIds.moderator) {
+                await channel.permissionOverwrites.create(
+                    this.client.roleIds.moderator,
+                    {
+                        ViewChannel: true,
+                        SendMessages: true,
+                        ReadMessageHistory: true,
+                        AttachFiles: true,
+                        EmbedLinks: true,
+                        ManageMessages: true,
                         ManageThreads: true,
                     }
                 );
